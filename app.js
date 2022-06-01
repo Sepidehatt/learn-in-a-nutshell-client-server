@@ -21,6 +21,8 @@ const { isAuthenticated } = require('./middleware/jwt.middleware')
 app.use("/api", require("./routes/index.routes"));
 app.use("/api/auth", require("./routes/auth.routes"));
 app.use("/api/users",isAuthenticated, require("./routes/user.routes"));
+app.use("/api/summeries",isAuthenticated, require("./routes/summery.routes"));
+app.use("/api/books",isAuthenticated, require("./routes/book.routes"));
 
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app);
