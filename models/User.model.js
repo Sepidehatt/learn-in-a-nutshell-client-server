@@ -22,6 +22,14 @@ const userSchema = new Schema(
       type: Boolean,
       default: false
     },
+    favSummery: {
+      type: [Schema.Types.ObjectId],
+      ref: "Summery"
+    },
+    favBook: {
+      type: [Schema.Types.ObjectId],
+      ref: "Book"
+    }
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`
