@@ -12,6 +12,7 @@ const summerySchema = new Schema(
       type: [Schema.Types.ObjectId],
       ref: "User"
     },
+    aboutSummery: String,
     summeryComments: {
       type: [Schema.Types.ObjectId],
       ref: "Comment"
