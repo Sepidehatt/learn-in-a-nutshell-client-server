@@ -87,7 +87,33 @@ router.put('/:summeryId/edit', (req, res, next) => {
 
 });
 
+
+
 //like summery
+router.put('/:summeryId', (req, res, next) => {
+  const { summeryId } = req.params;
+  const userId = req.payload._id;
+
+  Summery.findById(summeryId)
+      .then(summeryFound => {
+          if (!summeryFound.summeryLikes.includes(userId)) {
+              return Summery.findByIdAndUpdate(summeryId, { $push: { summeryLikes: userId } }, { new: true })
+          } else if (summeryFound.summeryLikes.includes(userId)) {
+              return Summery.findByIdAndUpdate(summeryId, { $pull: { summeryLikes: userId } }, { new: true })
+          }
+      })
+      .then(updateSummery => res.status(201).json(updateSummery))
+      .catch(err => {
+          console.log("error updating likes for summery", err);
+          res.status(500).json({
+              message: "error updating likes for summery",
+              error: err
+          });
+      })
+})
+
+
+
 
 //Delete Summery
 
