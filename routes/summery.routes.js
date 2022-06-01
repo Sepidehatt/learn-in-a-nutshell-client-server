@@ -183,13 +183,7 @@ router.post('/:summeryId/comments', (req, res, next) => {
 //like comment
 router.put('/comments/:commentId', (req, res, next) => {
   const { commentId } = req.params
-
   const userId = req.payload._id;
-
-  if (!mongoose.Types.ObjectId.isValid(commentId)) {
-      res.status(400).json({ message: 'Specified id is not valid' });
-      return;
-  }
 
   Comment.findById(commentId)
       .then(commentFound => {
