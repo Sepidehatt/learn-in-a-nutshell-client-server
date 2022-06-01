@@ -35,7 +35,9 @@ router.post('/:bookId', (req, res, next) => {
 router.get('/',(req,res,next)=>{
   Summery.find()
   .populate('summeryOwner')
+  .populate('summeryComments')
   .populate('refrenceBook')
+  .populate('summeryLikes')
   .then(response => res.status(201).json(response))
   .catch(err => {
       console.log("error getting summeries list in the DB", err);
@@ -52,7 +54,9 @@ router.get('/:summeryId',(req,res,next)=>{
   const {summeryId}=req.params
   Summery.findById(summeryId)
   .populate('summeryOwner')
+  .populate('summeryComments')
   .populate('refrenceBook')
+  .populate('summeryLikes')
   .then(response => res.status(201).json(response))
   .catch(err => {
       console.log("error getting a summery in the DB", err);
@@ -149,14 +153,66 @@ router.delete('/:summeryId', (req, res, next) => { //isAuthenticated, <= need to
 
 
 //create comment
+router.post('/:summeryId/comments', (req, res, next) => {
+  const { summeryId } = req.params;
+  const { title} = req.body;
 
-//remove comment
+  const newComment = {
+      title,
+      commentOwner: req.payload._id
+  }
+
+  Comment.create(newComment)
+      .then(newComment => {
+          return Summery.findByIdAndUpdate(summeryId, { $push: { summeryComments: newComment._id } }, { new: true })
+      })
+      .then(response => res.status(201).json(response))
+      .catch(err => {
+          console.log("error creating comment in the DB", err);
+          res.status(500).json({
+              message: "error creating comment in the DB",
+              error: err
+          });
+      })
+})
+
+
 
 //edit comment
 
 //like comment
+router.put('/comments/:commentId', (req, res, next) => {
+  const { commentId } = req.params
+
+  const userId = req.payload._id;
+
+  if (!mongoose.Types.ObjectId.isValid(commentId)) {
+      res.status(400).json({ message: 'Specified id is not valid' });
+      return;
+  }
+
+  Comment.findById(commentId)
+      .then(commentFound => {
+          console.log(commentFound)
+          if (!commentFound.commentLikes.includes(userId)) {
+              return Comment.findByIdAndUpdate(commentId, { $push: { commentLikes: userId } }, { new: true })
+          } else if (commentFound.commentLikes.includes(userId)) {
+              return Comment.findByIdAndUpdate(commentId, { $pull: { commentLikes: userId } }, { new: true })
+          }
+      })
+      .then(updatedComment => res.status(201).json(updatedComment))
+      .catch(err => {
+          console.log("error updating likes for post", err);
+          res.status(500).json({
+              message: "error updating likes for post",
+              error: err
+          });
+      })
+})
 
 
+
+//remove comment
 
 
 

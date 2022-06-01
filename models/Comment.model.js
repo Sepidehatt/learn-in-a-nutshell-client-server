@@ -6,7 +6,6 @@ const commentSchema = new Schema(
       type: String,
       required: true
     },
-    commentContent: String,
     commentLikes: {
       type: [Schema.Types.ObjectId],
       ref: "User"
