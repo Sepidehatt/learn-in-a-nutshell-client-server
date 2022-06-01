@@ -113,10 +113,39 @@ router.put('/:summeryId', (req, res, next) => {
 })
 
 
-
-
 //Delete Summery
+router.delete('/:summeryId', (req, res, next) => { //isAuthenticated, <= need to be secured
+  const { summeryId } = req.params;
 
+
+  Summery.findById(summeryId)
+      .then(summeryFound => {
+          if (summeryFound.summeryOwner == req.payload._id) {
+              return Summery.findByIdAndRemove(summeryId)
+                  .then(deteletedsummery => {
+                      return Comment.deleteMany({ _id: { $in: deteletedsummery.summeryComments } });
+                  })
+                  .then(() => res.json({ message: `summery with id ${summeryId} & all associated comments were removed successfully.` }))
+                  .catch(err => {
+                      console.log("error deleting summery", err);
+                      res.status(500).json({
+                          message: "error deleting summery",
+                          error: err
+                      });
+                  })
+          } else {
+              res.status(403).json({ message: "You didnt create this summery" })
+          }
+      })
+      .catch(err => {
+          console.log("user is not the owner of the summery", err);
+          res.status(400).json({
+              message: "user is not the owner of the summery",
+              error: err
+          });
+      });
+
+});
 
 
 //create comment
