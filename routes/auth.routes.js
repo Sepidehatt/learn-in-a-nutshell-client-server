@@ -9,7 +9,7 @@ const router = express.Router();
 const saltRounds = 10;
 
 // Create Account
-router.post('/signup', (req, res, next) => {
+router.post('/register', (req, res, next) => {
   const { email, password, username } = req.body;
 
   // Check if email or password or name are provided as empty string 
