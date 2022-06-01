@@ -5,9 +5,23 @@ const userSchema = new Schema(
   {
     username: {
       type: String,
-      // unique: true -> Ideally, should be unique, but its up to you
     },
-    password: String,
+    email: {
+      type: String,
+      unique: true,
+      required: true
+    },
+    password: {
+      type: String,
+      unique: true,
+      required: true
+    },
+    profileImage: String,
+    aboutMeme: String,
+    isAdmin: {
+      type: Boolean,
+      default: false
+    },
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`
