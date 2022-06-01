@@ -6,6 +6,7 @@ const bookSchema = new Schema(
       type: String,
       required : true
     },
+    aboutBook: String,
     bookImage:String,
     bookLikes: {
       type: [Schema.Types.ObjectId],
@@ -15,7 +16,11 @@ const bookSchema = new Schema(
       type: [Schema.Types.ObjectId],
       ref: "Comment"
     },
-    author: String
+    author: String,
+    bookOwner:{
+      type: Schema.Types.ObjectId,
+      ref: "User"
+    }
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`
